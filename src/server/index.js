@@ -4,6 +4,7 @@ import React from "react";
 import ReactDom from "react-dom/server";
 
 import App from "../client/components/app";
+import Axios from "axios";
 
 const app = express();
 
@@ -12,14 +13,20 @@ app.use(
   express.static(path.join(__dirname, "..", "..", "dist", "static"))
 );
 
-app.get("/ssr", (req, res) => {
+app.get("/ssr", async (req, res) => {
+  const result = await Axios.get("http://localhost:4000/posts/");
+  const posts = result.data;
   const root = (
     <html>
       <body>
         <div id="root">
-          <App />
+          <App posts={posts} />
         </div>
-
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__data__ = ${JSON.stringify(posts)}`,
+          }}
+        />
         <script src="/static/bundle.js"></script>
       </body>
     </html>
