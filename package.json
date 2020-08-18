@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build:static": "webpack && babel-node tools/index.js",
     "build:client": "webpack",
     "build:server": "babel src --out-dir dist",
     "build": "npm-run-all -s build:client build:server",
