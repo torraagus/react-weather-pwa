@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   mode: "development",
 
-  context: path.resolve(__dirname, 'src', 'client'), 
+  context: path.resolve(__dirname, 'src'), 
 
   entry: {
     app: "./index.js",
@@ -32,11 +32,11 @@ module.exports = {
     ],
   },
 
-  // plugins: [
-  //   new HtmlWebpackPlugin({
-  //     template: path.resolve(__dirname, "src", "index.html")
-  //   })
-  // ],
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "public", "index.html")
+    })
+  ],
 
   devtool: "inline-source-map",
 };
