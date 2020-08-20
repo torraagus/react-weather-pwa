@@ -1,35 +1,49 @@
 import React, { useState, useEffect } from "react";
-import Axios from "axios";
+import { fetchWeather } from "../api/fetchWeather";
 
-const App = (props) => {
-  const [hide, setHide] = useState(false);
-  // const [items, setItems] = useState([]);
+const App = () => {
+  const [query, setQuery] = useState("");
+  const [weather, setWeather] = useState({});
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const result = await Axios.get("http://localhost:4000/posts/");
-  //     const posts = result.data;
-  //     setItems(posts);
-  //   })();
-  // }, []);
-
-  const handleClick = () => {
-    setHide(!hide);
+  const search = async (e) => {
+    if (e.key === "Enter") {
+      const data = await fetchWeather(query);
+      console.log(data);
+      setWeather(data);
+      setQuery("");
+    }
   };
 
   return (
     <div>
-      <h1>Hola mundo!</h1>
-      <button onClick={handleClick}>{hide ? "Show" : "Hide"}</button>
-      <ul>
-        {!hide && props.items.map((item) => <li key={item.id}>{item.label}</li>)}
-      </ul>
+      <input
+        type="text"
+        placeholder="Search..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyPress={search}
+      />
+      {weather.main && (
+        <div>
+          <h2>
+            <span>{weather.name}</span>
+            <sup>{weather.sys.country}</sup>
+          </h2>
+          <div>
+            {Math.round(weather.main.temp)}
+            <sup>&deg;C</sup>
+          </div>
+          <div>
+            <img
+              src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+              alt={weather.weather[0].description}
+            />
+            <p>{weather.weather[0].description}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
-};
-
-App.defaultProps = {
-  items: [],
 };
 
 export default App;
