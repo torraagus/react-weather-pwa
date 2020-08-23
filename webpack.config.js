@@ -1,6 +1,8 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyPlugin = require('copy-webpack-plugin');
+const path = require("path"),
+  HtmlWebpackPlugin = require("html-webpack-plugin"),
+  WorkboxPlugin = require("workbox-webpack-plugin"),
+  CopyPlugin = require("copy-webpack-plugin");
+  MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
   mode: "development",
@@ -27,41 +29,52 @@ module.exports = {
     rules: [
       {
         test: /\.js/,
-        exclude: /node_modules/,
+        exclude: /node_modules,serviceworker/,
         loader: "babel-loader",
       },
+      {
+        test: /\.ico$/,
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]",
+        },
+      },
+      {
+        test: /\.(png|jpe?g|svg|gif)$/,
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]",
+          outputPath: "images",
+          publicPath: "/images",
+        },
+      },
+      {
+				test: /\.(css|sass|scss)$/,
+				use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+			},
     ],
   },
 
   plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "public", "index.html"),
+    new MiniCssExtractPlugin({
+      filename: "styles.css",
     }),
-    // new ServiceWorkerWebpackPlugin({
-    //   entry: path.join(__dirname, "public", "serviceworker.js"),
-    //   filename: "serviceworker.js",
-    // }),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, "src", "index.html"),
+    }),
     new CopyPlugin({
       patterns: [
-        // {
-        //   from: path.join(__dirname, "public", "serviceworker.js"),
-        //   to: path.join(__dirname, "dist"),
-        // },
-        // {
-        //   from: path.join(__dirname, "public", "offline.html"),
-        //   to: path.join(__dirname, "dist"),
-        // },
-        // {
-        //   from: path.join(__dirname, "public", "manifest.json"),
-        //   to: path.join(__dirname, "dist"),
-        // },
         {
           from: path.join(__dirname, "public"),
           to: path.join(__dirname, "dist"),
         },
       ],
     }),
+    new WorkboxPlugin.InjectManifest({
+      swDest: "serviceworker.js",
+      swSrc: "./serviceworker.js",
+    }),
   ],
 
-  devtool: "inline-source-map",
+  // devtool: "inline-source-map",
 };
