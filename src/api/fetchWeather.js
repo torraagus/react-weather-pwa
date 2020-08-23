@@ -10,6 +10,8 @@ export const fetchWeather = async (query) => {
       units: "metric",
       APPID: apiKey,
     },
+  }).catch(() => {
+    throw new Error("Cannot find the location!");
   });
   return data;
 };
