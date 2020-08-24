@@ -14,6 +14,7 @@ import {
   Text,
   Weather,
 } from "./app.styles";
+import logo from "../assets/images/logo192.png";
 
 const App = () => {
   const [query, setQuery] = useState("");
@@ -22,18 +23,17 @@ const App = () => {
   const queryRef = useRef(null);
 
   const search = async (e) => {
+    setError(null);
+    setWeather({});
     if (e.key === "Enter") {
       const data = await fetchWeather(query).catch((err) => {
         console.log(err);
         setError(`${err}`);
       });
 
-      if (data) {
-        setWeather(data);
-        setError(null);
-      }
-
       setQuery("");
+
+      if (data) setWeather(data);
     }
   };
 
@@ -47,13 +47,19 @@ const App = () => {
         <Input
           ref={queryRef}
           type="text"
-          placeholder="Search for a city..."
+          placeholder="Search for a location..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyPress={search}
         />
       </Search>
       {error && <p>{error}</p>}
+      {Object.entries(weather).length == 0 && !error && (
+        <>
+          <img src={logo} />
+          <p>Search for a location and get it's weather :)</p>
+        </>
+      )}
       {weather?.main && (
         <Weather>
           <Location>
