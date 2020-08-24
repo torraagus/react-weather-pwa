@@ -36,7 +36,7 @@ export const Input = styled.input`
   letter-spacing: 1px;
   border: none;
   text-align: center;
-  font-weight: 100;
+  font-weight: 300;
   outline: none;
 
   :focus {
@@ -69,14 +69,14 @@ export const Celcius = styled(Country)`
 
 export const Temperature = styled.div`
   font-size: 120px;
-  padding-bottom: 2rem;
+  // k-bottom: 2rem;
   font-weight: 900;
 `;
 
 export const Description = styled.div`
-  border-top: 2px solid ${colors.primary};
+  // border-top: 2px solid ${colors.primary};
   width: 100%;
-  padding-top: 2rem;
+  // padding-top: 2rem;
   text-align: center;
 `;
 
