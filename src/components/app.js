@@ -50,7 +50,7 @@ const App = () => {
           placeholder="Search for a location..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onKeyPress={search}
+          onKeyDown={search}
         />
       </Search>
       {error && <p>{error}</p>}
